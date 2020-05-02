@@ -13,8 +13,7 @@
     <string name="zero_number">0</string>
     <string name="del_number">←</string>
     <string name="input_text_view">Введите Pin код</string>
-
-
+    <string name="save_btn">Сохранить</string>
 
 
 </resources>

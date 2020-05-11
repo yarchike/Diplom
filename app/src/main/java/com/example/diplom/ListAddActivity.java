@@ -18,8 +18,11 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -35,6 +38,8 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
     private CheckBox checkDeadline;
     DBHelper dbHelper;
     Calendar dateAndTime=Calendar.getInstance();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
+
 
 
     @Override
@@ -81,16 +86,17 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ContentValues cv = new ContentValues();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         switch (item.getItemId()) {
             case R.id.action_save:
-                cv.put("heading", headlineText.getText().toString());
-                cv.put("body", bodyText.getText().toString());
-                cv.put("date", dateText.getText().toString());
-                cv.put("idList", ListActivity.simpleAdapterContent.size());
-                long rowID = db.insert("mytable", null, cv);
-                Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+                String headline = headlineText.getText().toString();
+                String body = bodyText.getText().toString();
+                Date date;
+                try {
+                     date = dateFormat.parse(dateText.getText().toString());
+                } catch (ParseException e) {
+                     date = null;
+                }
+                App.getNotesRepository().setNotes(new Note(headline,body, date ));
                 Intent intent = new Intent(ListAddActivity.this, ListActivity.class);
                 startActivity(intent);
                 break;

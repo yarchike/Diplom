@@ -1,7 +1,6 @@
 package com.example.diplom;
 
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,9 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -45,6 +47,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     DBHelper dbHelper;
     Dialog dialog;
     final int DIALOG_REMOVE = 1;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
 
 
     @Override
@@ -102,30 +105,18 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadBaseList() {
-        db = dbHelper.getWritableDatabase();
-        Cursor c = db.query("mytable", null, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            int id = c.getColumnIndex("id");
-            Log.d(LOG_TAG, "id= " + id);
-            int headingColIndex = c.getColumnIndex("heading");
-            Log.d(LOG_TAG, "id2= " + headingColIndex);
-            int bodyColIndex = c.getColumnIndex("body");
-            Log.d(LOG_TAG, "id3= " + bodyColIndex);
-            int dateColIndex = c.getColumnIndex("date");
-            Log.d(LOG_TAG, "База" + c.getString(headingColIndex));
-            //Log.d(LOG_TAG, "id" + c.getString(id));
-            do {
-            //
-                Map<String, String> temp = new HashMap<>();
-                temp.put(KEY1, c.getString(headingColIndex));
-                temp.put(KEY2, c.getString(bodyColIndex));
-                temp.put(KEY3, c.getString(dateColIndex));
-                simpleAdapterContent.add(temp);
-
-            } while (c.moveToNext());
-        } else {
-            Log.d(LOG_TAG, "0 rows");
-            c.close();
+        for (Note note: App.getNotesRepository().getNotes()) {
+// TODO научить адаптер работать с Note или создать отдельный класс обёртку над Note с отформатированной датой
+            Map<String, String> temp = new HashMap<>();
+            temp.put(KEY1, note.getHeading());
+            temp.put(KEY2, note.getBody());
+            Date date = note.getDate();
+            String dateFormatted = null;
+            if (date != null) {
+                dateFormatted = dateFormat.format(date);
+            }
+            temp.put(KEY3, dateFormatted);
+            simpleAdapterContent.add(temp);
         }
     }
 

@@ -1,7 +1,5 @@
 package com.example.diplom;
 
-import androidx.annotation.NonNull;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -79,9 +77,4 @@ public class Note implements Comparable<Note> {
         return this.getDate().compareTo(o.getDate());
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Дата " + DateUtil.DateToString(date);
-    }
 }

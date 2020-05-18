@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("Вход");
+        setTitle(getText(R.string.input));
 
         if (!App.getPinCodeRepository().hasPin()) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(MainActivity.this, ListActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Неверный пин", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.invalid_pin), Toast.LENGTH_LONG);
                         toast.show();
                         inputPin = "";
                         for (int i = 0; i < 4; i++) {
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Вы уже ввели четры цыфры", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.you_have_already_entered_the_four_digits), Toast.LENGTH_LONG);
             toast.show();
         }
         switch (v.getId()) {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (inputPin.length() > 0) {
             inputPin = inputPin.substring(0, (inputPin.length() - 1));
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Нету введеных цифр", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.no_digits_entered), Toast.LENGTH_LONG);
             toast.show();
         }
     }

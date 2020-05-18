@@ -1,18 +1,16 @@
 package com.example.diplom;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-;
 
 public class DateUtil {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
 
 
-    public static String DateToString(Date date){
+    public static String DateToString(Date date) {
         String dateFormatted = null;
         if (date != null) {
             dateFormatted = dateFormat.format(date);
@@ -20,7 +18,7 @@ public class DateUtil {
         return dateFormatted;
     }
 
-    public static Date StringToDate(String dateString){
+    public static Date StringToDate(String dateString) {
         Date date;
         try {
             date = dateFormat.parse(dateString);
@@ -29,7 +27,8 @@ public class DateUtil {
         }
         return date;
     }
-    public static Date clockReset(Date date){
+
+    public static Date clockReset(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 00);
@@ -39,7 +38,6 @@ public class DateUtil {
 
         return outputDate;
     }
-
 
 
 }

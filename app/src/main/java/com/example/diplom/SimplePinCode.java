@@ -2,7 +2,6 @@ package com.example.diplom;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -30,13 +29,12 @@ public class SimplePinCode implements PinCode {
     @Override
     public boolean checkPin(String pin) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String savedPin = sharedPreferences.getString(PIN, "");
-        return  getHash(pin).equals(savedPin);
+        return getHash(pin).equals(savedPin);
     }
 
     @Override
     public void saveNew(String pin) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Log.d("My", getHash(pin) + "Создание");
         editor.putString(PIN, getHash(pin));
         editor.apply();
 

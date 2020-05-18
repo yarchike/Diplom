@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Diplom</string>
+    <string name="app_name">Заметки</string>
 
     <string name="one_number">1</string>
     <string name="two_number">2</string>
@@ -26,7 +26,14 @@
         <string name="remove_data">Удалить задачу?</string>
         <string name="remove">Удалить</string>
         <string name="no">Нет</string>
+    <string name="note">Заметки</string>
+    <string name="editing_note">Редактирование заметки</string>
+    <string name="new_note">Новая заметка</string>
+    <string name="input">Вход</string>
 
+    <string name="invalid_pin">Неверный пин</string>
 
-
+    <string name="you_have_already_entered_the_four_digits">Вы уже ввели четры цыфры</string>
+    <string name="no_digits_entered">Нету введеных цифр</string>
+    <string name="not_enough_characters_for_pin_code">Не достаточно символов для пин кода</string>
 </resources>

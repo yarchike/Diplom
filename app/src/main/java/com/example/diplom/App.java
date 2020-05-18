@@ -19,6 +19,7 @@ public class App extends Application {
     public static NoteRepository getNotesRepository() {
         return notesRepository;
     }
+
     public static PinCode getPinCodeRepository() {
         return pinCode;
     }

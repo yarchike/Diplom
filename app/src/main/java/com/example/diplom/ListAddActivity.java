@@ -3,7 +3,6 @@ package com.example.diplom;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +18,6 @@ import androidx.appcompat.widget.Toolbar;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -33,7 +31,6 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
     private CheckBox checkDeadline;
     DBHelper dbHelper;
     Calendar dateAndTime = Calendar.getInstance();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
     int position;
 
     @Override
@@ -42,7 +39,11 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_list_add);
         Initialization();
         setSupportActionBar(toolbar_save);
+
         position = -1;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         Bundle extras = this.getIntent().getExtras();
 
@@ -54,6 +55,9 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
             headlineText.setText(App.getNotesRepository().getNotes().get(position).getHeading());
             bodyText.setText(App.getNotesRepository().getNotes().get(position).getBody());
             dateText.setText(DateUtil.DateToString(App.getNotesRepository().getNotes().get(position).getDate()));
+            setTitle(getText(R.string.editing_note));
+        } else {
+            setTitle(getText(R.string.new_note));
         }
         сalButton.setOnClickListener(this);
         checkDeadline.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -97,15 +101,18 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
                 String headline = headlineText.getText().toString();
                 String body = bodyText.getText().toString();
                 Date date = DateUtil.StringToDate(dateText.getText().toString());
-                if(position == -1){
+                if (position == -1) {
                     App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
-                }else {
+                } else {
                     App.getNotesRepository().removeNotes(position);
                     App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
                 }
 
                 Intent intent = new Intent(ListAddActivity.this, ListActivity.class);
                 startActivity(intent);
+                break;
+            case android.R.id.home:
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

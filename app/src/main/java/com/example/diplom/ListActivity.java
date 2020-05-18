@@ -3,7 +3,6 @@ package com.example.diplom;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +27,6 @@ import java.util.Map;
 
 public class ListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    private SQLiteDatabase db;
     private int position;
     static final String KEY1 = "Key1";
     static final String KEY2 = "Key2";
@@ -40,9 +37,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private BaseAdapter listContentAdapter;
     final String LOG_TAG = "Mylog";
     private Toolbar toolbar;
-    private SwipeRefreshLayout swipeLayout;
     DBHelper dbHelper;
-    Dialog dialog;
     final int DIALOG_REMOVE = 1;
 
 
@@ -56,6 +51,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         loadBaseList();
         listContentAdapter = createAdapter(simpleAdapterContent);
         list.setAdapter(listContentAdapter);
+        setTitle(getText(R.string.note));
         list.setOnItemClickListener(this);
         list.setOnItemLongClickListener(this);
 
@@ -104,7 +100,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private void loadBaseList() {
         simpleAdapterContent.clear();
         for (Note note : App.getNotesRepository().getNotes()) {
-// TODO научить адаптер работать с Note или создать отдельный класс обёртку над Note с отформатированной датой
             Map<String, String> temp = new HashMap<>();
             temp.put(KEY1, note.getHeading());
             temp.put(KEY2, note.getBody());
@@ -119,7 +114,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         showDialog(DIALOG_REMOVE);
         position = i;
-        return false;
+        return true;
     }
 
     DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
@@ -169,7 +164,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Intent intentEdit = new Intent(ListActivity.this, ListAddActivity.class);
         intentEdit.putExtra("position", i);
         startActivity(intentEdit);
-        Log.d("My", "Нажали на элемент");
     }
 }
 

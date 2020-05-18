@@ -4,7 +4,8 @@ import java.util.List;
 
 public interface NoteRepository {
     List<Note> getNotes();
-    void setNotes(Note note);
-    void removeNotes(int position);
 
+    void setNotes(Note note);
+
+    void removeNotes(int position);
 }

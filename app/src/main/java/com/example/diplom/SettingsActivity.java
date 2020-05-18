@@ -1,11 +1,8 @@
 package com.example.diplom;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         Initialization();
         hideAndShowBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
+        setTitle("Настройки");
     }
 
     @Override
@@ -45,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.saveBtn:
-                if(newPinText.getText().toString().length() == 4){
+                if (newPinText.getText().toString().length() == 4) {
                     try {
                         App.getPinCodeRepository().saveNew(newPinText.getText().toString());
                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
@@ -53,8 +51,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     }
                     Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                     startActivity(intent);
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(), "Не достаточно символов для пин кода", Toast.LENGTH_LONG);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.not_enough_characters_for_pin_code), Toast.LENGTH_LONG);
                     toast.show();
                 }
         }

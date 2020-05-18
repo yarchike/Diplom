@@ -5,18 +5,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 public class DbNotesRepository implements NoteRepository {
     private static final String LOG_TAG = DbNotesRepository.class.getName();
     private static final String NOTES_TABLE_NAME = "mytable";
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
     private SQLiteDatabase database;
 
     public DbNotesRepository(SQLiteDatabase database) {
@@ -29,11 +26,8 @@ public class DbNotesRepository implements NoteRepository {
             if (c.moveToFirst()) {
                 List<Note> result = new ArrayList<>();
                 int id = c.getColumnIndex("id");
-                Log.d(LOG_TAG, "id= " + id);
                 int headingColIndex = c.getColumnIndex("heading");
-                Log.d(LOG_TAG, "id2= " + headingColIndex);
                 int bodyColIndex = c.getColumnIndex("body");
-                Log.d(LOG_TAG, "id3= " + bodyColIndex);
                 int dateColIndex = c.getColumnIndex("date");
                 int idColIndex = c.getColumnIndex("idList");
                 do {
@@ -44,7 +38,7 @@ public class DbNotesRepository implements NoteRepository {
                     result.add(new Note(heading, body, date, idList));
                 } while (c.moveToNext());
                 Log.d("list", result.toString());
-               // Collections.sort(result);
+                Collections.sort(result);
                 Log.d("list", result.toString());
                 return result;
             } else {

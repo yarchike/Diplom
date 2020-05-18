@@ -1,9 +1,7 @@
 package com.example.diplom;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     private List<Map<String, String>> mValues;
     private Context mContext;
-    final String LOG_TAG = "Mylog";
 
 
     public MyCustomAdapter(List<Map<String, String>> values, Context applicationContext) {
@@ -68,8 +65,6 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
 
         if (temp != null) {
-            Log.d("My", now.toString());
-            Log.d("My", DateUtil.clockReset(temp).toString());
             if (DateUtil.clockReset(temp).toString().equals(now.toString())) {
                 title.setBackgroundColor(Color.YELLOW);
                 subtitle.setBackgroundColor(Color.YELLOW);

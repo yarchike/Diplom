@@ -1,9 +1,7 @@
 package com.example.diplom;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,21 +23,18 @@ import java.util.Locale;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.example.diplom.DBHelper.LOG_TAG;
 
 public class ListAddActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar_save;
-    DatePickerDialog datePickerDialog;
     private EditText headlineText;
     private EditText bodyText;
     private EditText dateText;
     private ImageButton сalButton;
     private CheckBox checkDeadline;
     DBHelper dbHelper;
-    Calendar dateAndTime=Calendar.getInstance();
+    Calendar dateAndTime = Calendar.getInstance();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
-
-
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +42,32 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_list_add);
         Initialization();
         setSupportActionBar(toolbar_save);
+        position = -1;
+
+        Bundle extras = this.getIntent().getExtras();
+
+        if (extras != null) {
+            checkDeadline.setChecked(true);
+            dateText.setVisibility(VISIBLE);
+            сalButton.setVisibility(VISIBLE);
+            position = extras.getInt("position");
+            headlineText.setText(App.getNotesRepository().getNotes().get(position).getHeading());
+            bodyText.setText(App.getNotesRepository().getNotes().get(position).getBody());
+            dateText.setText(DateUtil.DateToString(App.getNotesRepository().getNotes().get(position).getDate()));
+        }
         сalButton.setOnClickListener(this);
         checkDeadline.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     dateText.setVisibility(VISIBLE);
                     сalButton.setVisibility(VISIBLE);
-                }else{
+                } else {
                     dateText.setVisibility(GONE);
                     сalButton.setVisibility(GONE);
                 }
             }
         });
-
 
 
     }
@@ -90,13 +96,14 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.action_save:
                 String headline = headlineText.getText().toString();
                 String body = bodyText.getText().toString();
-                Date date;
-                try {
-                     date = dateFormat.parse(dateText.getText().toString());
-                } catch (ParseException e) {
-                     date = null;
+                Date date = DateUtil.StringToDate(dateText.getText().toString());
+                if(position == -1){
+                    App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
+                }else {
+                    App.getNotesRepository().removeNotes(position);
+                    App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
                 }
-                App.getNotesRepository().setNotes(new Note(headline,body, date ));
+
                 Intent intent = new Intent(ListAddActivity.this, ListActivity.class);
                 startActivity(intent);
                 break;
@@ -106,7 +113,7 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.calendarBtn:
                 setDate(view);
                 break;
@@ -114,6 +121,7 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
     public void setDate(View v) {
         new DatePickerDialog(ListAddActivity.this, d,
                 dateAndTime.get(Calendar.YEAR),
@@ -121,31 +129,20 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
                 dateAndTime.get(Calendar.DAY_OF_MONTH))
                 .show();
     }
-   /* public void setTime(View v) {
-        new TimePickerDialog(ListAddActivity.this, t,
-                dateAndTime.get(Calendar.HOUR_OF_DAY),
-                dateAndTime.get(Calendar.MINUTE), true)
-                .show();
-    }*/
+
 
     private void setInitialDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm");
         dateText.setText(dateFormat.format(dateAndTime.getTimeInMillis()));
     }
-   /* TimePickerDialog.OnTimeSetListener t=new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            dateAndTime.set(Calendar.HOUR_OF_DAY, 0);
-            dateAndTime.set(Calendar.MINUTE, 0);
-            setInitialDateTime();
-        }
-    };*/
-    DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
+
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             dateAndTime.set(Calendar.YEAR, year);
             dateAndTime.set(Calendar.MONTH, monthOfYear);
             dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            dateAndTime.set(Calendar.HOUR_OF_DAY, 0);
-            dateAndTime.set(Calendar.MINUTE, 0);
+            dateAndTime.set(Calendar.HOUR_OF_DAY, 23);
+            dateAndTime.set(Calendar.MINUTE, 59);
             setInitialDateTime();
         }
     };

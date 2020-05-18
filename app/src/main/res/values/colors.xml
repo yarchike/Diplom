@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="gray_dark">#2C302F</color>
     <color name="oval_btn">#00916D</color>
+    <color name="expired">#FF0008</color>
 </resources>

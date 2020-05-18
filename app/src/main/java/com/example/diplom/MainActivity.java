@@ -1,20 +1,16 @@
 package com.example.diplom;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -33,36 +29,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button nine_btn;
     private Button zero_btn;
     private Button del_btn;
-
-    String testPin;
-
-    final static String PIN_KEY = "PIN";
-    private String pinCode;
     private String inputPin = "";
-
     private int keyImgPin = 0;
     private ImageView[] imgkey;
-    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = getSharedPreferences("Pin", MODE_PRIVATE);
-        Bundle arguments = getIntent().getExtras();
-        if(arguments != null){
+        setTitle("Вход");
 
-            sharedPref.edit().putString(PIN_KEY, arguments.get(PIN_KEY).toString()).commit();
-            Log.d("Mylog", arguments.get(PIN_KEY) + "получение");
+        if (!App.getPinCodeRepository().hasPin()) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         }
-
-
-
-
-
-        pinCode = sharedPref.getString(PIN_KEY, "");
-        Log.d("Mylog",  pinCode + "получение пин");
-        checkForAvailability();
         Initialization();
         one_btn.setOnClickListener(this);
         two_btn.setOnClickListener(this);
@@ -138,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (inputPin.length() == 4) {
                 try {
-                    if (pinCode.equals(getHash(inputPin))) {
+                    if (App.getPinCodeRepository().checkPin(inputPin)) {
                         Intent intent = new Intent(MainActivity.this, ListActivity.class);
                         startActivity(intent);
                     } else {
@@ -206,25 +186,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         del_btn = findViewById(R.id.del_btn);
     }
 
-    private void checkForAvailability() {
-
-        if (pinCode.equals("")) {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        }
-
-    }
-
-    public static String getHash(String str) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        MessageDigest m = MessageDigest.getInstance("MD5");
-        m.reset();
-        m.update(str.getBytes("utf-8"));
-        StringBuilder s2 = new StringBuilder(new BigInteger(1, m.digest()).toString(16));
-        while (s2.length() < 32) {
-            s2.insert(0, "0");
-        }
-        return s2.toString();
-    }
 
     private void deleteLastCharacter() {
         if (inputPin.length() > 0) {

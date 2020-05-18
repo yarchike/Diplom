@@ -3,7 +3,6 @@ package com.example.diplom;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,12 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -47,7 +44,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     DBHelper dbHelper;
     Dialog dialog;
     final int DIALOG_REMOVE = 1;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy  HH:mm", Locale.US);
 
 
     @Override
@@ -60,6 +56,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         loadBaseList();
         listContentAdapter = createAdapter(simpleAdapterContent);
         list.setAdapter(listContentAdapter);
+        list.setOnItemClickListener(this);
         list.setOnItemLongClickListener(this);
 
 
@@ -105,25 +102,18 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadBaseList() {
-        for (Note note: App.getNotesRepository().getNotes()) {
+        simpleAdapterContent.clear();
+        for (Note note : App.getNotesRepository().getNotes()) {
 // TODO научить адаптер работать с Note или создать отдельный класс обёртку над Note с отформатированной датой
             Map<String, String> temp = new HashMap<>();
             temp.put(KEY1, note.getHeading());
             temp.put(KEY2, note.getBody());
             Date date = note.getDate();
-            String dateFormatted = null;
-            if (date != null) {
-                dateFormatted = dateFormat.format(date);
-            }
-            temp.put(KEY3, dateFormatted);
+            temp.put(KEY3, DateUtil.DateToString(date));
             simpleAdapterContent.add(temp);
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -140,8 +130,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d(LOG_TAG, "Удалить");
                     simpleAdapterContent.remove(position);
                     listContentAdapter.notifyDataSetChanged();
-                    db = dbHelper.getWritableDatabase();
-                    int delCount = db.delete("mytable", "idList = " + position, null);
+                    App.getNotesRepository().removeNotes(position);
                     break;
                 case Dialog.BUTTON_NEGATIVE:
                     Log.d(LOG_TAG, "Неее");
@@ -169,5 +158,18 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateDialog(id);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+        Intent intentEdit = new Intent(ListActivity.this, ListAddActivity.class);
+        intentEdit.putExtra("position", i);
+        startActivity(intentEdit);
+        Log.d("My", "Нажали на элемент");
+    }
 }
 

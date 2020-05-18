@@ -21,20 +21,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private EditText newPinText;
     private ImageButton hideAndShowBtn;
     private Button saveBtn;
-    SharedPreferences sharedPref;
     String outputPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        sharedPref = getSharedPreferences("Pin", MODE_PRIVATE);
         Initialization();
         hideAndShowBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
-
-
-
     }
 
     @Override
@@ -43,28 +38,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.hideAndShowBtn:
                 if (newPinText.getInputType() == InputType.TYPE_CLASS_NUMBER) {
                     newPinText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                    hideAndShowBtn.setImageResource(R.drawable.ic_eye);
                 } else {
                     newPinText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    hideAndShowBtn.setImageResource(R.drawable.ic_no_eye);
                 }
                 break;
             case R.id.saveBtn:
                 if(newPinText.getText().toString().length() == 4){
                     try {
-                        outputPin = MainActivity.getHash(newPinText.getText().toString());
+                        App.getPinCodeRepository().saveNew(newPinText.getText().toString());
                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
                     Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.PIN_KEY, outputPin);
                     startActivity(intent);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(), "Не достаточно символов для пин кода", Toast.LENGTH_LONG);
                     toast.show();
                 }
-
-
-
-
         }
     }
 

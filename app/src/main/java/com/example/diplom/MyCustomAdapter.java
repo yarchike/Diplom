@@ -1,6 +1,9 @@
 package com.example.diplom;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +48,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         return 0;
     }
 
+
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         if (view == null) {
@@ -58,8 +63,24 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         title.setText(map.get(KEY1));
         subtitle.setText(map.get(KEY2));
         date.setText(map.get(KEY3));
+        Date temp = DateUtil.StringToDate(map.get(KEY3));
+        Date now = DateUtil.clockReset(new Date());
 
 
+        if (temp != null) {
+            Log.d("My", now.toString());
+            Log.d("My", DateUtil.clockReset(temp).toString());
+            if (DateUtil.clockReset(temp).toString().equals(now.toString())) {
+                title.setBackgroundColor(Color.YELLOW);
+                subtitle.setBackgroundColor(Color.YELLOW);
+                date.setBackgroundColor(Color.YELLOW);
+            } else if (temp.before(now)) {
+                title.setBackgroundColor(Color.RED);
+                subtitle.setBackgroundColor(Color.RED);
+                date.setBackgroundColor(Color.RED);
+            }
+
+        }
 
 
         return view;

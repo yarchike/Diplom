@@ -18,7 +18,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private EditText newPinText;
     private ImageButton hideAndShowBtn;
     private Button saveBtn;
-    String outputPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         Initialization();
         hideAndShowBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
-        setTitle("Настройки");
+        Bundle extras = this.getIntent().getExtras();
+        setTitle(getText(R.string.settings));
+
+
     }
 
     @Override

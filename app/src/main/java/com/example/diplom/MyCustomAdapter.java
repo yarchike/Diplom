@@ -11,21 +11,16 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import static com.example.diplom.ListActivity.KEY1;
-import static com.example.diplom.ListActivity.KEY2;
-import static com.example.diplom.ListActivity.KEY3;
 
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
 
-    private List<Map<String, String>> mValues;
+    private List<Note> mValues;
     private Context mContext;
 
 
-    public MyCustomAdapter(List<Map<String, String>> values, Context applicationContext) {
+    public MyCustomAdapter(List<Note> values, Context applicationContext) {
         mValues = values;
         mContext = applicationContext;
     }
@@ -53,26 +48,24 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.list_layout, null);
         }
 
-        Map<String, String> map = mValues.get(i);
+        Note note = mValues.get(i);
         TextView title = view.findViewById(R.id.TextOne);
         TextView subtitle = view.findViewById(R.id.TextTwo);
         TextView date = view.findViewById(R.id.TextThree);
-        title.setText(map.get(KEY1));
-        subtitle.setText(map.get(KEY2));
-        date.setText(map.get(KEY3));
-        Date temp = DateUtil.StringToDate(map.get(KEY3));
+        title.setText(note.getHeading());
+        subtitle.setText(note.getBody());
+        date.setText(DateUtil.DateToString(note.getDate()));
+        Date temp = note.getDate();
         Date now = DateUtil.clockReset(new Date());
 
 
         if (temp != null) {
             if (DateUtil.clockReset(temp).toString().equals(now.toString())) {
-                title.setBackgroundColor(Color.YELLOW);
-                subtitle.setBackgroundColor(Color.YELLOW);
-                date.setBackgroundColor(Color.YELLOW);
+                view.setBackgroundColor(Color.YELLOW);
             } else if (temp.before(now)) {
-                title.setBackgroundColor(Color.RED);
-                subtitle.setBackgroundColor(Color.RED);
-                date.setBackgroundColor(Color.RED);
+                view.setBackgroundColor(Color.RED);
+            } else {
+                view.setBackground(null);
             }
 
         }

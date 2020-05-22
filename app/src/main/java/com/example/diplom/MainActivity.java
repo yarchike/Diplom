@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     if (App.getPinCodeRepository().checkPin(inputPin)) {
                         Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     } else {
                         Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.invalid_pin), Toast.LENGTH_LONG);
@@ -190,9 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void deleteLastCharacter() {
         if (inputPin.length() > 0) {
             inputPin = inputPin.substring(0, (inputPin.length() - 1));
-        } else {
-            Toast toast = Toast.makeText(getApplicationContext(), getText(R.string.no_digits_entered), Toast.LENGTH_LONG);
-            toast.show();
         }
     }
 

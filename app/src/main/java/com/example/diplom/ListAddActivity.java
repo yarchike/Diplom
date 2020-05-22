@@ -1,7 +1,6 @@
 package com.example.diplom;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -96,24 +95,18 @@ public class ListAddActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                String headline = headlineText.getText().toString();
-                String body = bodyText.getText().toString();
-                Date date = DateUtil.StringToDate(dateText.getText().toString());
-                if (position == -1) {
-                    App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
-                } else {
-                    App.getNotesRepository().removeNotes(position);
-                    App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
-                }
+        if (item.getItemId() == R.id.action_save) {
+            String headline = headlineText.getText().toString();
+            String body = bodyText.getText().toString();
+            Date date = DateUtil.StringToDate(dateText.getText().toString());
+            if (position == -1) {
+                App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
+            } else {
+                App.getNotesRepository().removeNotes(position);
+                App.getNotesRepository().setNotes(new Note(headline, body, date, App.getNotesRepository().getNotes().size()));
+            }
 
-                Intent intent = new Intent(ListAddActivity.this, ListActivity.class);
-                startActivity(intent);
-                break;
-            case android.R.id.home:
-                finish();
-                break;
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -19,27 +19,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class ListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private int position;
-    static final String KEY1 = "Key1";
-    static final String KEY2 = "Key2";
-    static final String KEY3 = "Key3";
-    public static List<Map<String, String>> simpleAdapterContent = new ArrayList<>();
+    private List<Note> simpleAdapterContent = new ArrayList<>();
     private ListView list;
     private Button addBtn;
     private BaseAdapter listContentAdapter;
     final String LOG_TAG = "Mylog";
     private Toolbar toolbar;
-    DBHelper dbHelper;
     final int DIALOG_REMOVE = 1;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        loadBaseList();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Initialization();
         setSupportActionBar(toolbar);
         addBtn.setOnClickListener(this);
-        loadBaseList();
         listContentAdapter = createAdapter(simpleAdapterContent);
         list.setAdapter(listContentAdapter);
         setTitle(getText(R.string.note));
@@ -61,13 +59,12 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private void Initialization() {
         toolbar = findViewById(R.id.toolbar);
         list = findViewById(R.id.list);
-        dbHelper = new DBHelper(this);
         addBtn = findViewById(R.id.add_btn);
         list = findViewById(R.id.list);
     }
 
     @NonNull
-    private BaseAdapter createAdapter(List<Map<String, String>> values) {
+    private BaseAdapter createAdapter(List<Note> values) {
         return new MyCustomAdapter(values, getApplicationContext());
     }
 
@@ -100,12 +97,12 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private void loadBaseList() {
         simpleAdapterContent.clear();
         for (Note note : App.getNotesRepository().getNotes()) {
-            Map<String, String> temp = new HashMap<>();
+            /*Map<String, String> temp = new HashMap<>();
             temp.put(KEY1, note.getHeading());
             temp.put(KEY2, note.getBody());
             Date date = note.getDate();
-            temp.put(KEY3, DateUtil.DateToString(date));
-            simpleAdapterContent.add(temp);
+            temp.put(KEY3, DateUtil.DateToString(date));*/
+            simpleAdapterContent.add(note);
         }
     }
 

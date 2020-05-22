@@ -29,12 +29,11 @@ public class DbNotesRepository implements NoteRepository {
                 int headingColIndex = c.getColumnIndex("heading");
                 int bodyColIndex = c.getColumnIndex("body");
                 int dateColIndex = c.getColumnIndex("date");
-                int idColIndex = c.getColumnIndex("idList");
                 do {
                     String heading = c.getString(headingColIndex);
                     String body = c.getString(bodyColIndex);
                     Date date = DateUtil.StringToDate(c.getString(dateColIndex));
-                    int idList = c.getInt(idColIndex);
+                    int idList = c.getInt(id);
                     result.add(new Note(heading, body, date, idList));
                 } while (c.moveToNext());
                 Log.d("list", result.toString());
@@ -54,14 +53,13 @@ public class DbNotesRepository implements NoteRepository {
         cv.put("heading", note.getHeading());
         cv.put("body", note.getBody());
         cv.put("date", DateUtil.DateToString(note.getDate()));
-        cv.put("idList", ListActivity.simpleAdapterContent.size());
         long rowID = database.insert(NOTES_TABLE_NAME, null, cv);
         Log.d(LOG_TAG, "row inserted, ID = " + rowID);
     }
 
     @Override
     public void removeNotes(int position) {
-        int delCount = database.delete(NOTES_TABLE_NAME, "idList = " + App.getNotesRepository().getNotes().get(position).getId(), null);
+        int delCount = database.delete(NOTES_TABLE_NAME, "id = " + App.getNotesRepository().getNotes().get(position).getId(), null);
     }
 
 }

@@ -36,4 +36,7 @@
     <string name="you_have_already_entered_the_four_digits">Вы уже ввели четры цыфры</string>
     <string name="no_digits_entered">Нету введеных цифр</string>
     <string name="not_enough_characters_for_pin_code">Не достаточно символов для пин кода</string>
+    <string name="new_pin">Введите пинкод</string>
+    <string name="settings">Настройки</string>
+    <string name="сr_change_pin_code">Создание / Изменение пин кода</string>
 </resources>
